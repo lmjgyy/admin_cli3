@@ -46,7 +46,7 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
+    redirect: '/example/charts',
     children: [{
       path: 'dashboard',
       name: 'Dashboard',
@@ -65,15 +65,27 @@ export const constantRoutes = [
       {
         path: 'table',
         name: 'Table',
-        component: () => import('@/views/table/index'),
+        component: () => import('@/views/example/table/index'),
         meta: { title: 'Table', icon: 'table' }
       },
       {
         path: 'tree',
         name: 'Tree',
-        component: () => import('@/views/tree/index'),
+        component: () => import('@/views/example/tree/index'),
         meta: { title: 'Tree', icon: 'tree' }
-      }
+      },
+      {
+        path: 'infiniteScroll',
+        name: 'InfiniteScroll',
+        component: () => import('@/views/example/infiniteScroll/index'),
+        meta: { title: 'infiniteScroll', icon: 'infiniteScroll' }
+      },
+      {
+        path: 'charts',
+        name: 'Charts',
+        component: () => import('@/views/example/charts/index'),
+        meta: { title: 'charts', icon: 'charts' }
+      },
     ]
   },
 

@@ -13,6 +13,7 @@
       ref="table"
       :pageConfig = "{ pagesizes: [10, 50, 100, 200]}"
       @current-change="handleCurrentChange"
+      :defaultSort="{prop: 'pageviews', order: 'descending'}"
     >
       <!-- lazy
       default-expand-all
@@ -53,16 +54,6 @@ import BaseTable from '@/components/BaseTable/_base-table'
 export default {
   components: {
     BaseTable
-  },
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'gray',
-        deleted: 'danger'
-      }
-      return statusMap[status]
-    }
   },
   data() {
     return {

@@ -8,7 +8,10 @@
 /* paganation.vue */
 .base-pagination{
 	@include flex(space-between);
-	margin-top: 15px;
+	margin: 15px 0;
+	.base-pagination__hidden{
+		visibility: hidden;
+	}
 }
 
 /* drawerball */

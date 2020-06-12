@@ -11,8 +11,9 @@
       :popper-class="config.popperClass"
       :disabled="config.disabled"
       :small="config.small"
-      :hide-on-single-page="config.hide && pageVo.total/pageVo.pagesize<=1"
-      
+      :hide-on-single-page="config.hideForSingle && pageVo.total/pageVo.pagesize<=1"
+      :class="{'base-pagination__hidden': config.hiddenPrev}"
+
       :current-page="pageVo.currentPage"
       :page-size="pageVo.pagesize"
       :total="pageVo.total">
@@ -27,7 +28,8 @@
       :layout="config.layoutNext"
       :disabled="config.disabled"
       :small="config.small"
-      :hide-on-single-page="config.hide && pageVo.total/pageVo.pagesize<=1"
+      :hide-on-single-page="config.hideForSingle && pageVo.total/pageVo.pagesize<=1"
+      :class="{'base-pagination__hidden': config.hiddenNext}"
 
       :current-page="pageVo.currentPage"
       :page-size="pageVo.pagesize"
@@ -49,7 +51,9 @@ export default {
         popperClass: '',
         disabled: false,
         small: false,
-        hide: true
+        hideForSingle: true,
+        hiddenPrev: false,
+        hiddenNext: false
       },
       configOptions: [
         'pagesizes',
@@ -60,7 +64,9 @@ export default {
         'popperClass',
         'disabled',
         'small',
-        'hide'
+        'hideForSingle',
+        'hiddenPrev',
+        'hiddenNext'
       ]
     }
   },

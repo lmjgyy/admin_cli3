@@ -99,19 +99,23 @@ const TASKMANAGE = [
   {
     prop: 'name',
     label: '任务名称',
-
   },
   {
     prop: 'status',
     label: '状态',
+    slotBodyName: 'status',
+    renderHtml: true,
+    align: 'center'
   },
   {
     prop: 'obj_name',
     label: '操作对象',
+    align: 'center'
   },
   {
     prop: 'created_at',
     label: '创建时间',
+    align: 'center'
   },
 ]
 export default {

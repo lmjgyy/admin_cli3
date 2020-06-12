@@ -9,6 +9,13 @@ export default {
         return utils.emptyText(item.formatter(row, column.property))
       }
       return row[column.property]
-    }
+    },
+    refreshData (val) {
+      if (this.mode == 'normal') {
+        this.$emit('refreshData', val);
+      } else {
+        this.pageVo = val
+      }
+    },
   }
 }

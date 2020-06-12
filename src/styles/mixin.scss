@@ -30,7 +30,7 @@
 @mixin flex ($justify:center,$align:unset,$direction: unset) {
   display: flex;
   justify-content: $justify;
-  align-item: $align;
+  align-items: $align;
   flex-direction: $direction;
 }
 
@@ -46,4 +46,10 @@
   width: $width;
   height:$height;
   display: $display;
+}
+
+@mixin titleStyle ($color: $textTitle, $textWeight: bolder, $textSize: 24px) {
+  color: $textTitle;
+  font-weight: $textWeight;
+  font-size: $textSize;
 }

@@ -1,0 +1,17 @@
+/* infiniteScroll.vue */
+.base-infiniteScroll-wrapper {
+    @include size(100%, 500px, block);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+	.infinite-list-item {
+		@include size(unset, 50px);
+		@include flex(center,center);
+		background: #e8f3fe;
+		margin: 10px;
+		color: #7dbcfc;
+	}
+	.base-infiniteScroll-wrapper__noData{
+		text-align: center;
+	}
+}

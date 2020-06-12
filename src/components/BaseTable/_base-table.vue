@@ -46,7 +46,7 @@
       @current-change="currentChange"
       @header-draggend="headerDraggend"
       @expand-change="expandChange"
-      :default-sort = "{prop: 'pageviews', order: 'descending'}"
+      :default-sort = "defaultSort"
     >
      <template slot="empty" v-if="!loading">
         <empty></empty>
@@ -85,7 +85,7 @@
         :header-align="item.headerAlign"
         :align="item.align || 'left'"
         :sortable="item.sortable"
-        :type="item.type||''"
+        :type="item.type"
         :sort-method="item.sortMethod"
         :filters="item.filters && getSingleObj(tableConfig.tableData.map((v) => { return { text: v[item.prop], value: v[item.prop] }}), {})"
         :filter-method="item.filterMethod"
@@ -115,7 +115,7 @@
       </el-table-column>
       <slot name="suffix"></slot>
     </el-table>
-    <pagination :pageVo.sync="pageVo" @update="update" :pageConfig="pageConfig" v-if="hasPagination"></pagination>
+    <pagination :pageVo.sync="pageVo" @update="refreshData" :pageConfig="pageConfig" v-if="hasPagination"></pagination>
   </div>
 </template>
 
@@ -325,6 +325,10 @@ export default {
         return { hasChildren: 'hasChildren', children: 'children' }
       }
     },
+    defaultSort: {
+       type: Object,
+       default: () => {}
+    },
     // 累加索引
     AccumulateIndex: {
       type: Boolean,
@@ -337,13 +341,6 @@ export default {
     }
   },
   methods: {
-    update (val) {
-      if (this.mode == 'normal') {
-        this.$emit('refreshData');
-      } else {
-        this.pageVo = val
-      }
-    },
     indexMethod (index) {
       return (this.pageVo.currentPage - 1) * this.pageVo.pagesize + index + 1
     },
