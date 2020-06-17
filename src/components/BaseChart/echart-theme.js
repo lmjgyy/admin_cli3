@@ -1,4 +1,4 @@
-const echart_theme = 
+const echart_theme =
 {
     "color": [
         "#3fb1e3",
@@ -16,7 +16,24 @@ const echart_theme =
         },
         "subtextStyle": {
             "color": "#999999"
-        }
+        },
+        "text": "",
+        "subtext": "",
+        "x": "center",
+        "y": "top"
+    },
+    "grid": {
+      "left": '10%',
+      "right": '4%',
+      "bottom": '3%',
+      "containLabel": true
+    },
+    "xAxis": {
+      "type": 'category',
+      "boundaryGap": false,
+    },
+    "yAxis": { 
+      "type": 'value',
     },
     "line": {
         "itemStyle": {
@@ -400,9 +417,13 @@ const echart_theme =
     "legend": {
         "textStyle": {
             "color": "#999999"
-        }
+        },
+        "orient": 'vertical',
+        "x": 'left',
+        "y": 'top',
     },
     "tooltip": {
+        "show": true,
         "axisPointer": {
             "lineStyle": {
                 "color": "#cccccc",

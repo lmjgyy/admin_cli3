@@ -116,11 +116,21 @@ function param2Obj(url) {
     let val2 = obj2[attr];
     return val1 - val2;
   }
+  // uuid
+  function S4() {
+    return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
+  }
+  function getUuid() {
+    // 用于生成uuid
+    const id = (S4() + S4() + S4() + S4() + S4() + S4() + S4() + S4())
+    return id;
+  }
   export default {
     parseTime,
     formatTime,
     param2Obj,
     emptyText,
     isEmptyWord,
-    sort
+    sort,
+    getUuid
   }
