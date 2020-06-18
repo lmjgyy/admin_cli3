@@ -1,9 +1,9 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-text">name: {{ name }}</div>
-    <el-carousel indicator-position="outside">
+    <el-carousel indicator-position="outside" :interval="4000" type="card">
 	    <el-carousel-item v-for="(item,index) in imgList" :key="index">
-	      <img :src="item.src" alt="">
+	      <img :src="item.src" alt="" style="width: 100%;">
 	    </el-carousel-item>
 	  </el-carousel>
   </div>
@@ -26,7 +26,19 @@ export default {
           src: require('../../assets/dashboard/lufei.jpg')
         },
         {
-          src: require('../../assets/dashboard/lufei.jpg')
+          src: require('../../assets/dashboard/suolong.jpg')
+        },
+        {
+          src: require('../../assets/dashboard/shanzhi.jpg')
+        },
+        {
+          src: require('../../assets/dashboard/namei.jpg')
+        },
+        {
+          src: require('../../assets/dashboard/qiaoba.jpg')
+        },
+        {
+          src: require('../../assets/dashboard/wusuopu.jpg')
         }
       ]
     }
