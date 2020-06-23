@@ -3,7 +3,6 @@
     <el-tabs v-model="activeName" @edit="handleTabsEdit" editable  type="card">
       <el-tab-pane :label="v.title" :name="v.name" v-for="(v, i) in editableTabs" :key="i">
         <div :class="`item${i}`">
-
         </div>
       </el-tab-pane>
     </el-tabs>

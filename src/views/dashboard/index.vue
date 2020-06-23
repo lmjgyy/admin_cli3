@@ -6,6 +6,9 @@
 	      <img :src="item.src" alt="" style="width: 100%;">
 	    </el-carousel-item>
 	  </el-carousel>
+    <progress value="0.25" >25%</progress>
+    	
+进度：<meter value="0.5"></meter>
   </div>
 </template>
 

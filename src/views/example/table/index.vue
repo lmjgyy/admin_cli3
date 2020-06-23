@@ -29,7 +29,7 @@
         <el-input v-model="search" size="mini" placeholder="输入关键字搜索"/>
       </template>
       <template v-slot:optionBody="scope">
-        <el-button size="mini" @click="handleEdit(scope.scope.$index, scope.scope.row)">Edit</el-button>
+        <el-button size="mini" @click="handleEdit(scope.scope.$index, scope.scope.row)">Upload</el-button>
         <el-button size="mini" type="danger" @click="handleDelete(scope.scope.$index, scope.scope.row)">Delete</el-button>
       </template>
       <template v-slot:expanderHeader="scope">

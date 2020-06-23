@@ -70,3 +70,76 @@
 		background-repeat: no-repeat;
 	}
 }
+
+/* uploader.vue */
+.base-uploader {
+	@include position(fixed,unset,15px,15px,unset);
+	z-index: 20;
+	.uploader-app {
+		width: 520px;
+	}
+	.file-panel {
+		background-color: $whiteBgColor;
+		border: 1px solid #e2e2e2;
+		border-radius: 7px 7px 0 0;
+		box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+		.file-title {
+			@include flex();
+			height: 40px;
+			line-height: 40px;
+			padding: 0 15px;
+			border-bottom: 1px solid #ddd;
+			.operate {
+				flex: 1;
+				text-align: right;
+			}
+		}
+		.file-list {
+			@include position(relative);
+			height: 240px;
+			overflow-x: hidden;
+			overflow-y: auto;
+			background-color: $whiteBgColor;
+
+			> li {
+				background-color: $whiteBgColor;
+			}
+		}
+		&.collapse {
+			.file-title {
+				background-color: #E7ECF2;
+			}
+		}
+	}
+	.no-file {
+		@include position(absolute, 50%, unset, unset, 50%);
+		transform: translate(-50%, -50%);
+		font-size: 16px;
+	}
+
+	.uploader-file-icon {
+		&:before {
+			content: '' !important;
+		}
+
+		&[icon=image] {
+			background: url(../assets/component/image-icon.png)
+		}
+		&[icon=video] {
+			background: url(../assets/component/video-icon.png)
+		}
+		&[icon=document] {
+			background: url(../assets/component/text-icon.png)
+		}
+	}
+
+	.uploader-file-actions > span {
+		margin-right: 6px;
+	}
+}
+
+/* 隐藏上传按钮 */
+#global-uploader-btn {
+	@include position(absolute);
+	clip: rect(0, 0, 0, 0);
+}

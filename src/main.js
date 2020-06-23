@@ -13,6 +13,8 @@ import store from './store'
 import router from './router'
 import '@/icons' // icon
 import * as filters from './filters'
+import uploader from 'vue-simple-uploader'
+Vue.use(uploader)
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
