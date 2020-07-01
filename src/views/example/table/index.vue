@@ -6,6 +6,7 @@
       highlight-current-row
       hasIndex
       hasSelect
+      hasScreen
       :tableConfig="tableConfig"
       :mode="'no-pagination'"
       :loading="loading"

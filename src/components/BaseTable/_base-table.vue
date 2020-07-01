@@ -75,7 +75,7 @@
       <el-table-column
         :prop="item.prop||''"
         :label="item.label||''"
-        v-for="(item,index) in columnOptions[tableConfig.columnOptions]"
+        v-for="(item,index) in currentColumnOptions"
         :key="index"
         :width="item.width||''"
         show-overflow-tooltip
@@ -114,6 +114,11 @@
         </template>
       </el-table-column>
       <slot name="suffix"></slot>
+      <el-table-column width="56" align="center" v-if="hasScreen">
+        <template slot="header" slot-scope="scope">
+          <screen-column :screen-data="{ checkedColumns, originColumns, cloumn: scope.column }" :dropItem="dropItem" @hide="hideColumn"></screen-column>
+        </template>
+      </el-table-column>
     </el-table>
     <pagination :pageVo.sync="pageVo" @update="refreshData" :pageConfig="pageConfig" v-if="hasPagination"></pagination>
   </div>
@@ -124,12 +129,14 @@ import columnOptions from '@/common/column-options'
 import Empty from './empty'
 import Pagination from './pagination.vue'
 import tabMix from '@/mixins/table-mix.js'
+import ScreenColumn from './screen-column.vue'
 export default {
   name: 'baseTable',
   mixins: [ tabMix ],
   components: {
     Empty,
-    Pagination
+    Pagination,
+    ScreenColumn
   },
   computed: {
     pageVo: {
@@ -154,6 +161,21 @@ export default {
           return this.tableConfig.tableData.slice((this.tableConfig.currentPage-1)*this.tableConfig.pagesize, this.tableConfig.currentPage*this.tableConfig.pagesize);
       }
     }
+  },
+  data() {
+    return {
+      columnOptions: columnOptions,
+      currentColumnOptions: [],
+      dropItem: [],
+      fixedColumn: [],
+      checkedColumns: [],
+      originColumns: [],
+      operateColumns: []
+    }
+  },
+  created () {
+    this.currentColumnOptions = this.columnOptions[this.tableConfig.columnOptions]
+    this.formatColumnOptions(this.currentColumnOptions)
   },
   props: {
     // 分页模式
@@ -333,11 +355,11 @@ export default {
     AccumulateIndex: {
       type: Boolean,
       default: true
-    }
-  },
-  data() {
-    return {
-      columnOptions: columnOptions
+    },
+    // 更多
+    hasScreen: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -401,6 +423,33 @@ export default {
         obj[next.value] ? '' : obj[next.value] = true && cur.push(next);
         return cur;
       }, [])
+    },
+    formatColumnOptions(columns) {
+      var { dropItem, fixedColumn, checkedColumns, operateColumns } = {dropItem:[], fixedColumn:[], checkedColumns:[], operateColumns: []}
+      for (var i = 0, len = columns.length; i < len; i++) {
+        let column = columns[i]
+        if (!column.locked && column.label) {
+          dropItem.push({value: column.prop, label: column.label})
+          if (!column.hidden) {
+            checkedColumns.push(column.prop)
+          }
+        } else {
+          if (column.prop) {
+            fixedColumn.push(column.prop)
+          } else {
+            operateColumns.push(column.type)
+          }
+        }
+      }
+      this.dropItem = dropItem;
+      this.fixedColumn = fixedColumn;
+      this.checkedColumns = checkedColumns;
+      this.operateColumns = operateColumns;
+    },
+    hideColumn (data) {
+      this.checkedColumns = data.checkedColumns
+      this.originColumns = [...this.checkedColumns]
+      this.currentColumnOptions = this.columnOptions[this.tableConfig.columnOptions].filter(v => this.fixedColumn.includes(v.prop) || this.checkedColumns.includes(v.prop) || this.operateColumns.includes(v.type))
     }
   },
 }

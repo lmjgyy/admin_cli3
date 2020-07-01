@@ -9,13 +9,15 @@ slotBodyName: 插槽体名称,
 slotHeaderName: 插槽头名称,
 formatter: 数据格式化,
 renderHtml: 是否自定义body,
-fiexed: 固定列到左或右  /true /'left'/'right'
+fixed: 固定列到左或右  /true /'left'/'right'
 filters: 是否筛选 / true
 filterMethod: 筛选方法
 resizable: 是否可调节列宽度
 filterMultiple： 是否多选
 headerAlign: 表头对齐方式
+locked: 固定列
 renderHeader: 是否自定义header */
+
 import utils from '@/utils'
 
 const WRITER_INFO = [
@@ -28,6 +30,7 @@ const WRITER_INFO = [
   {
     prop: 'title',
     label: 'Title',
+    locked: true
   },
   {
     prop: 'author',
@@ -73,6 +76,7 @@ const WRITER_INFO = [
   },
   {
     align: 'right',
+    type: 'operate',
     width: 200,
     renderHeader: true,
     renderHtml: true,
