@@ -28,7 +28,7 @@ module.exports = {
   outputDir: 'dist',
   assetsDir: 'static',
   lintOnSave: false,
-  productionSourceMap: false,
+  productionSourceMap: true,
   devServer: {
     port: port,
     open: true,
@@ -65,7 +65,8 @@ module.exports = {
       alias: {
         '@': resolve('src')
       }
-    }
+    },
+    devtool: 'source-map'
   },
   chainWebpack(config) {
     config.plugins.delete('preload') // TODO: need test
@@ -94,6 +95,7 @@ module.exports = {
       .use('vue-loader')
       .loader('vue-loader')
       .tap(options => {
+        options.compilerOptions = {}
         options.compilerOptions.preserveWhitespace = true
         return options
       })

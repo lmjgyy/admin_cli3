@@ -2,12 +2,17 @@
   <div class="app-container">
     <el-form ref="form" :model="form" label-width="120px">
       <el-form-item label="Activity name">
-        <el-input v-model="form.name" />
+        <el-input v-model="form.name" maxlength="500" show-word-limit/>
       </el-form-item>
       <el-form-item label="Activity zone">
-        <el-select v-model="form.region" placeholder="please select your zone">
-          <el-option label="Zone one" value="shanghai" />
-          <el-option label="Zone two" value="beijing" />
+        <el-select v-model="form.region" multiple @change="change" placeholder="please select your zone">
+          <el-option label="Zone 1" value="shanghai" />
+          <el-option label="Zone 2" value="beijing" />
+          <el-option label="Zone 3" value="tianjin" />
+          <el-option label="Zone 4" value="chongqing" />
+          <el-option label="Zone 5" value="chengdu" />
+          <el-option label="Zone 6" value="wuhan" />
+          <el-option label="Zone 7" value="shenzhen" />
         </el-select>
       </el-form-item>
       <el-form-item label="Activity time">
@@ -44,10 +49,17 @@
         <el-button @click="onCancel">Cancel</el-button>
       </el-form-item>
     </el-form>
+    <!-- <aaa>
+      <template v-slot="{list=[4,5,6]}">
+        <div>{{list}}</div>
+      </template>
+    </aaa> -->
   </div>
 </template>
 
 <script>
+import { debounce, wait_for } from '@/utils'
+import { getList } from '@/api/table'
 export default {
   data() {
     return {
@@ -59,9 +71,16 @@ export default {
         delivery: false,
         type: [],
         resource: '',
-        desc: ''
+        desc: '',
+        wait: 0
       }
     }
+  },
+  components: {
+    // aaa
+  },
+  mounted () {
+    var that = this
   },
   methods: {
     onSubmit() {
@@ -72,7 +91,18 @@ export default {
         message: 'cancel!',
         type: 'warning'
       })
-    }
+    },
+    change (e) {
+      this.aaa('nnnn')
+      this.wait = e.length ? 1500 : 0
+    },
+    aaa: debounce(function(e) {
+      this.fetchData()
+    }),
+    fetchData() {
+      getList().then(res => {
+      })
+    },
   }
 }
 </script>

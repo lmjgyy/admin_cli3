@@ -88,9 +88,15 @@ export const constantRoutes = [
       },
       {
         path: 'uploader',
-        name: 'Charts',
+        name: 'uploader',
         component: () => import('@/views/example/uploader/index'),
         meta: { title: 'uploader', icon: 'uploader' }
+      },
+      {
+        path: 'try',
+        name: 'try',
+        component: () => import('@/views/example/try/index'),
+        meta: { title: 'try', icon: 'uploader' }
       },
     ]
   },
