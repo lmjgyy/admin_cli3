@@ -13,6 +13,7 @@ import store from './store'
 import router from './router'
 import '@/icons' // icon
 import * as filters from './filters'
+import Bus from './bus'
 import uploader from 'vue-simple-uploader'
 Vue.use(uploader)
 /**
@@ -28,7 +29,7 @@ if (process.env.NODE_ENV === 'production') {
   console.log(mockXHR)
   mockXHR()
 }
-
+Vue.prototype.$bus = new Bus()
 // set ElementUI lang to EN
 // Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明

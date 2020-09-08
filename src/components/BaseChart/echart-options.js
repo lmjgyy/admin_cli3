@@ -58,7 +58,6 @@ BaseChart.prototype.generateChart = function (type) {
       ...this.defaultVal(type),
       ...{series: this.series}
     }
-    console.log(option)
     var chart = this.initChart(option);
     return chart
   }

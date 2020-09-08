@@ -87,20 +87,19 @@ export const constantRoutes = [
         meta: { title: 'charts', icon: 'charts' }
       },
       {
-        path: 'uploader',
-        name: 'uploader',
-        component: () => import('@/views/example/uploader/index'),
-        meta: { title: 'uploader', icon: 'uploader' }
-      },
-      {
         path: 'try',
         name: 'try',
         component: () => import('@/views/example/try/index'),
         meta: { title: 'try', icon: 'uploader' }
       },
+      {
+        path: 'component',
+        name: 'component',
+        component: () => import('@/views/example/component/index'),
+        meta: { title: 'component', icon: 'uploader' }
+      },
     ]
   },
-
   {
     path: '/form',
     component: Layout,
@@ -172,17 +171,6 @@ export const constantRoutes = [
     ]
   },
 
-  {
-    path: 'external-link',
-    component: Layout,
-    children: [
-      {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'External Link', icon: 'link' }
-      }
-    ]
-  },
-
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
@@ -194,6 +182,29 @@ const createRouter = () => new Router({
 })
 
 const router = createRouter()
+var asyncRoute;
+setTimeout(() => {
+  asyncRoute = [{
+    path: '/external-link',
+    name: 'external-link',
+    component: 'Layout',
+  }]
+  const routeConfig = asyncRoute.map(route => mapComponents(route))
+  router.options.routes = routeConfig
+  router.addRoutes(routeConfig)
+}, 3000)
+const compMap = {
+  'Layout': () => import("@/layout")
+}
+
+function mapComponents(route){
+  route.component = compMap[route.component]
+  if (route.children && route.children.component) {
+    route.children = route.children.map(child => mapComponents(child))
+  }
+  return route
+}
+
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {

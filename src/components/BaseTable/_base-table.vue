@@ -46,31 +46,25 @@
       @current-change="currentChange"
       @header-draggend="headerDraggend"
       @expand-change="expandChange"
-      :default-sort = "defaultSort"
+      :default-sort="defaultSort"
     >
-     <template slot="empty" v-if="!loading">
+      <template slot="empty" v-if="!loading">
         <empty></empty>
       </template>
-      <el-table-column
-        v-if="hasSelect"
-        align="center"
-        type="selection"
-        label="#"
-        width="55">
-      </el-table-column>
-<!--      <el-table-column align="center" label="#" width="50" v-if="hasIndex">
+      <el-table-column v-if="hasSelect" align="center" type="selection" label="#" width="55"></el-table-column>
+      <!--      <el-table-column align="center" label="#" width="50" v-if="hasIndex">
         <template slot-scope="scope">
           {{ scope.$index }}
         </template>
-      </el-table-column> -->
+      </el-table-column>-->
       <el-table-column
         label="#"
         align="center"
         v-if="hasIndex"
         type="index"
         :index="AccumulateIndex?indexMethod:''"
-        width="50">
-      </el-table-column>
+        width="50"
+      ></el-table-column>
       <slot name="prefix"></slot>
       <el-table-column
         :prop="item.prop||''"
@@ -98,69 +92,92 @@
           <span>{{item.label}}</span>
         </template>
 
-       <template slot-scope="scope">
+        <template slot-scope="scope">
           <div v-if="item.renderHtml">
             <!--  自定义body，renderHtml判断，格式： { prop: 'status', label: 'Status', align: 'center', width: 200, slotBodyrName: 'status', renderHtml: true } -->
-            <slot :name="item.slotBodyName" :scope="{row: scope.row, column: scope.column, columnOption: item}" v-if="!item.renderHeader"></slot>
+            <slot
+              :name="item.slotBodyName"
+              :scope="{row: scope.row, column: scope.column, columnOption: item}"
+              v-if="!item.renderHeader"
+            ></slot>
             <!-- 自定义头部的body -->
-            <slot :name="item.slotBodyName" :scope="{row: scope.row, columnOptions: columnOptions[tableConfig.columnOptions]}" v-else></slot>
+            <slot
+              :name="item.slotBodyName"
+              :scope="{row: scope.row, columnOptions: columnOptions[tableConfig.columnOptions]}"
+              v-else
+            ></slot>
           </div>
           <div v-if="item.type=='expand'">
             <!-- 展开表格，expand判断， 格式：{ type: 'expand', slotBodyrName: 'expand' } -->
-            <slot :name="item.slotBodyName" :scope="{row: scope.row, columnOptions: columnOptions[tableConfig.columnOptions]}"></slot>
+            <slot
+              :name="item.slotBodyName"
+              :scope="{row: scope.row, columnOptions: columnOptions[tableConfig.columnOptions]}"
+            ></slot>
           </div>
-            <!-- 普通列， 格式： { prop: 'title', label: 'Title', } -->
+          <!-- 普通列， 格式： { prop: 'title', label: 'Title', } -->
           <span v-if="!item.renderHtml">{{ renderCell(scope.row, scope.column, item) }}</span>
         </template>
       </el-table-column>
       <slot name="suffix"></slot>
       <el-table-column width="56" align="center" v-if="hasScreen">
         <template slot="header" slot-scope="scope">
-          <screen-column :screen-data="{ checkedColumns, originColumns, cloumn: scope.column }" :dropItem="dropItem" @hide="hideColumn"></screen-column>
+          <screen-column
+            :screen-data="{ checkedColumns, originColumns, cloumn: scope.column }"
+            :dropItem="dropItem"
+            @hide="hideColumn"
+          ></screen-column>
         </template>
       </el-table-column>
     </el-table>
-    <pagination :pageVo.sync="pageVo" @update="refreshData" :pageConfig="pageConfig" v-if="hasPagination"></pagination>
+    <pagination
+      :pageVo.sync="pageVo"
+      @update="refreshData"
+      :pageConfig="pageConfig"
+      v-if="hasPagination"
+    ></pagination>
   </div>
 </template>
 
 <script>
-import columnOptions from '@/common/column-options'
-import Empty from './empty'
-import Pagination from './pagination.vue'
-import tabMix from '@/mixins/table-mix.js'
-import ScreenColumn from './screen-column.vue'
+import columnOptions from "@/common/column-options";
+import Empty from "./empty";
+import Pagination from "./pagination.vue";
+import tabMix from "@/mixins/table-mix.js";
+import ScreenColumn from "./screen-column.vue";
 export default {
-  name: 'baseTable',
-  mixins: [ tabMix ],
+  name: "baseTable",
+  mixins: [tabMix],
   components: {
     Empty,
     Pagination,
-    ScreenColumn
+    ScreenColumn,
   },
   computed: {
     pageVo: {
-      get () {
+      get() {
         return {
           total: this.tableConfig.total || 0,
           pagesize: this.tableConfig.pagesize || 10,
-          currentPage: this.tableConfig.currentPage || 1
+          currentPage: this.tableConfig.currentPage || 1,
+        };
+      },
+      set(val) {
+        for (let attr in val) {
+          this.tableConfig[attr] = val[attr];
         }
       },
-      set (val) {
-        for (let attr in val) {
-          this.tableConfig[attr] = val[attr]
-        }
+    },
+    paginationMode() {
+      switch (this.mode) {
+        case "normal":
+          return this.tableConfig.tableData;
+        case "no-pagination":
+          return this.tableConfig.tableData.slice(
+            (this.tableConfig.currentPage - 1) * this.tableConfig.pagesize,
+            this.tableConfig.currentPage * this.tableConfig.pagesize
+          );
       }
     },
-    paginationMode () {
-      switch (this.mode) {
-        case 'normal':
-          return this.tableConfig.tableData;
-        case 'no-pagination':
-          return this.tableConfig.tableData.slice((this.tableConfig.currentPage-1)*this.tableConfig.pagesize, this.tableConfig.currentPage*this.tableConfig.pagesize);
-      }
-    }
   },
   data() {
     return {
@@ -170,28 +187,30 @@ export default {
       fixedColumn: [],
       checkedColumns: [],
       originColumns: [],
-      operateColumns: []
-    }
+      operateColumns: [],
+    };
   },
-  created () {
-    this.currentColumnOptions = this.columnOptions[this.tableConfig.columnOptions]
-    this.formatColumnOptions(this.currentColumnOptions)
+  created() {
+    this.currentColumnOptions = this.columnOptions[
+      this.tableConfig.columnOptions
+    ];
+    this.formatColumnOptions(this.currentColumnOptions);
   },
   props: {
     // 分页模式
     mode: {
       type: String,
-      default: 'normal'
+      default: "normal",
     },
     pageConfig: {
       type: Object,
       default: () => {
-        return {}
-      }
+        return {};
+      },
     },
     hasPagination: {
       type: Boolean,
-      default: true
+      default: true,
     },
     // 表格
     tableConfig: {
@@ -199,245 +218,258 @@ export default {
       default: () => {
         return {
           tableData: [],
-          columnOptions: '',
+          columnOptions: "",
           total: 0,
           pagesize: 10,
-          currentPage:1
-        }
-      }
+          currentPage: 1,
+        };
+      },
     },
     // 分页在上，表格在下
     isReverse: {
       type: Boolean,
-      default: false
+      default: false,
     },
     loading: {
       type: Boolean,
-      default: false
+      default: false,
     },
     border: {
       type: Boolean,
-      default: false
+      default: false,
     },
     fit: {
       type: Boolean,
-      default: false
+      default: false,
     },
     stripe: {
       type: Boolean,
-      default: false
+      default: false,
     },
     highlightRow: {
       type: Boolean,
-      default: false
+      default: false,
     },
     hasSelect: {
       type: Boolean,
-      default: false
+      default: false,
     },
     hasIndex: {
       type: Boolean,
-      default: false
+      default: false,
     },
     height: {
-      type: Number
+      type: Number,
     },
     size: {
       type: String,
-      default: ''
+      default: "",
     },
     showHeader: {
       type: Boolean,
-      default: true
+      default: true,
     },
-    rowClassName: { // 返回字符串
+    rowClassName: {
+      // 返回字符串
       type: Function,
-      default: ({ row, rowIndex}) => {
-        return ''
-      }
+      default: ({ row, rowIndex }) => {
+        return "";
+      },
     },
-    rowStyle: { // 返回对象
+    rowStyle: {
+      // 返回对象
       type: Function,
-      default: ({ row, rowIndex}) => {
-        return {}
-      }
+      default: ({ row, rowIndex }) => {
+        return {};
+      },
     },
-    cellClassName: { // 返回字符串
+    cellClassName: {
+      // 返回字符串
       type: Function,
-      default: ({ row, rowIndex, columnIndex}) => {
-        return ''
-      }
+      default: ({ row, rowIndex, columnIndex }) => {
+        return "";
+      },
     },
-    cellStyle: { // 返回对象
+    cellStyle: {
+      // 返回对象
       type: Function,
-      default: ({ row, column, rowIndex, columnIndex}) => {
-        return {}
-      }
+      default: ({ row, column, rowIndex, columnIndex }) => {
+        return {};
+      },
     },
-    headerRowClassName: { // 返回字符串
+    headerRowClassName: {
+      // 返回字符串
       type: Function,
-      default: ({ row, rowIndex}) => {
-        return ''
-      }
+      default: ({ row, rowIndex }) => {
+        return "";
+      },
     },
-    headerRowStyle: { // 返回对象
+    headerRowStyle: {
+      // 返回对象
       type: Function,
-      default: ({ row, rowIndex}) => {
-        return {}
-      }
+      default: ({ row, rowIndex }) => {
+        return {};
+      },
     },
-    headerCellClassName: { // 返回字符串
+    headerCellClassName: {
+      // 返回字符串
       type: Function,
-      default: ({ row, column, rowIndex, columnIndex}) => {
-        return ''
-      }
+      default: ({ row, column, rowIndex, columnIndex }) => {
+        return "";
+      },
     },
-    headerCellStyle: { // 返回对象
+    headerCellStyle: {
+      // 返回对象
       type: Function,
-      default: ({ row, column, rowIndex, columnIndex}) => {
-        return {}
-      }
+      default: ({ row, column, rowIndex, columnIndex }) => {
+        return {};
+      },
     },
     rowKey: {
       type: String,
-      default: ''
+      default: "",
     },
     defaultExpandAll: {
       type: Boolean,
-      default: false
+      default: false,
     },
     expandRowKeys: {
       type: Array,
     },
     tooltipEffect: {
       type: String,
-      default: 'dark'
+      default: "dark",
     },
     showSummary: {
       type: Boolean,
-      default: false
+      default: false,
     },
     sumText: {
       type: String,
-      default: '合计'
+      default: "合计",
     },
     spanMethod: {
       type: Function,
-      default: ({ row, column, rowIndex, columnIndex }) => {}
+      default: ({ row, column, rowIndex, columnIndex }) => {},
     },
     selectOnIndeterminate: {
       type: Boolean,
-      default: true
+      default: true,
     },
     indent: {
       type: Number,
-      default: 16
+      default: 16,
     },
     lazy: {
       type: Boolean,
-      default: false
+      default: false,
     },
     load: {
       type: Function,
-      default: (row, treeNode, resolve) => {}
+      default: (row, treeNode, resolve) => {},
     },
     treeProps: {
       type: Object,
       default: () => {
-        return { hasChildren: 'hasChildren', children: 'children' }
-      }
+        return { hasChildren: "hasChildren", children: "children" };
+      },
     },
     defaultSort: {
-       type: Object,
-       default: () => {}
+      type: Object,
+      default: () => {},
     },
     // 累加索引
     AccumulateIndex: {
       type: Boolean,
-      default: true
+      default: true,
     },
     // 更多
     hasScreen: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   methods: {
-    indexMethod (index) {
-      return (this.pageVo.currentPage - 1) * this.pageVo.pagesize + index + 1
+    indexMethod(index) {
+      return (this.pageVo.currentPage - 1) * this.pageVo.pagesize + index + 1;
     },
-    select (selection, row) {
-      this.$emit('select', selection, row)
+    select(selection, row) {
+      this.$emit("select", selection, row);
     },
-    selectAll (selection) {
-      this.$emit('select-all', selection)
+    selectAll(selection) {
+      this.$emit("select-all", selection);
     },
-    selectionChange (selection) {
-      this.$emit('selection-change', selection)
+    selectionChange(selection) {
+      this.$emit("selection-change", selection);
     },
-    cellMouseEnter (row, column, cell, event) {
-      this.$emit('cell-mouse-enter', row, column, cell, event)
+    cellMouseEnter(row, column, cell, event) {
+      this.$emit("cell-mouse-enter", row, column, cell, event);
     },
-    cellMouseLeave (row, column, cell, event) {
-      this.$emit('cell-mouse-leave', row, column, cell, event)
+    cellMouseLeave(row, column, cell, event) {
+      this.$emit("cell-mouse-leave", row, column, cell, event);
     },
-    cellClick (row, column, cell, event) {
-      this.$emit('cell-click', row, column, cell, event)
+    cellClick(row, column, cell, event) {
+      this.$emit("cell-click", row, column, cell, event);
     },
-    cellDbclick (row, column, cell, event) {
-      this.$emit('cell-dbclick', row, column, cell, event)
+    cellDbclick(row, column, cell, event) {
+      this.$emit("cell-dbclick", row, column, cell, event);
     },
-    rowClick (row, column, event) {
-      this.$emit('row-click', row, column, event)
+    rowClick(row, column, event) {
+      this.$emit("row-click", row, column, event);
     },
-    rowDbclick (row, column, event) {
-      this.$emit('row-dbclick', row, column, event)
+    rowDbclick(row, column, event) {
+      this.$emit("row-dbclick", row, column, event);
     },
-    rowContextmenu (row, column, event) {
-      this.$emit('row-contextmenu', row, column, event)
+    rowContextmenu(row, column, event) {
+      this.$emit("row-contextmenu", row, column, event);
     },
-    headerClick (column, event) {
-      this.$emit('header-click', column, event)
+    headerClick(column, event) {
+      this.$emit("header-click", column, event);
     },
-    headerContextmenu (column, event) {
-      this.$emit('header-contextmenu', column, event)
+    headerContextmenu(column, event) {
+      this.$emit("header-contextmenu", column, event);
     },
-    sortChange ({ column, prop, order }) {
-      this.$emit('sort-change', { column, prop, order })
+    sortChange({ column, prop, order }) {
+      this.$emit("sort-change", { column, prop, order });
     },
-    filterChange (filters) {
-      this.$emit('filter-change', filters)
+    filterChange(filters) {
+      this.$emit("filter-change", filters);
     },
-    currentChange (currentRow, oldCurrentRow) {
-      this.$emit('current-change', currentRow, oldCurrentRow)
+    currentChange(currentRow, oldCurrentRow) {
+      this.$emit("current-change", currentRow, oldCurrentRow);
     },
-    headerDraggend (newWidth, oldWidth, column, event) {
-      this.$emit('header-draggend', newWidth, oldWidth, column, event)
+    headerDraggend(newWidth, oldWidth, column, event) {
+      this.$emit("header-draggend", newWidth, oldWidth, column, event);
     },
-    expandChange (row, expandedRows) {
-      this.$emit('expand-change', row, expandedRows)
+    expandChange(row, expandedRows) {
+      this.$emit("expand-change", row, expandedRows);
     },
     // 过滤对象数组去重
-    getSingleObj (arr, obj) {
+    getSingleObj(arr, obj) {
       return arr.reduce((cur, next) => {
-        obj[next.value] ? '' : obj[next.value] = true && cur.push(next);
+        obj[next.value] ? "" : (obj[next.value] = true && cur.push(next));
         return cur;
-      }, [])
+      }, []);
     },
     formatColumnOptions(columns) {
-      var { dropItem, fixedColumn, checkedColumns, operateColumns } = {dropItem:[], fixedColumn:[], checkedColumns:[], operateColumns: []}
+      var { dropItem, fixedColumn, checkedColumns, operateColumns } = {
+        dropItem: [],
+        fixedColumn: [],
+        checkedColumns: [],
+        operateColumns: [],
+      };
       for (var i = 0, len = columns.length; i < len; i++) {
-        let column = columns[i]
+        let column = columns[i];
         if (!column.locked && column.label) {
-          dropItem.push({value: column.prop, label: column.label})
+          dropItem.push({ value: column.prop, label: column.label });
           if (!column.hidden) {
-            checkedColumns.push(column.prop)
+            checkedColumns.push(column.prop);
           }
         } else {
           if (column.prop) {
-            fixedColumn.push(column.prop)
+            fixedColumn.push(column.prop);
           } else {
-            operateColumns.push(column.type)
+            operateColumns.push(column.type);
           }
         }
       }
@@ -446,11 +478,18 @@ export default {
       this.checkedColumns = checkedColumns;
       this.operateColumns = operateColumns;
     },
-    hideColumn (data) {
-      this.checkedColumns = data.checkedColumns
-      this.originColumns = [...this.checkedColumns]
-      this.currentColumnOptions = this.columnOptions[this.tableConfig.columnOptions].filter(v => this.fixedColumn.includes(v.prop) || this.checkedColumns.includes(v.prop) || this.operateColumns.includes(v.type))
-    }
+    hideColumn(data) {
+      this.checkedColumns = data.checkedColumns;
+      this.originColumns = [...this.checkedColumns];
+      this.currentColumnOptions = this.columnOptions[
+        this.tableConfig.columnOptions
+      ].filter(
+        (v) =>
+          this.fixedColumn.includes(v.prop) ||
+          this.checkedColumns.includes(v.prop) ||
+          this.operateColumns.includes(v.type)
+      );
+    },
   },
-}
+};
 </script>

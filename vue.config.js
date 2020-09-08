@@ -36,6 +36,12 @@ module.exports = {
       warnings: false,
       errors: true
     },
+    proxy: {
+      '/api': {
+        target: 'http://localhost:9090',
+        pathRewrite: { '^api/': ''}
+      }
+    },
 	// proxy: {
 	// 	[process.env.VUE_APP_BASE_API]: {
 	// 		target: process.env.VUE_APP_API,
@@ -69,6 +75,7 @@ module.exports = {
     devtool: 'source-map'
   },
   chainWebpack(config) {
+    console.log(config.module.rule('svg'), '---------')
     config.plugins.delete('preload') // TODO: need test
     config.plugins.delete('prefetch') // TODO: need test
 

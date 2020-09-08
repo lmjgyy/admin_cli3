@@ -27,6 +27,5 @@ requireComponent.keys().forEach((fileName) => {
     .slice(1)
 
   // Globally register the component
-  console.log(componentName, componentConfig.default)
   Vue.component(componentName, componentConfig.default || componentConfig)
 })

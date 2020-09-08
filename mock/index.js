@@ -8,7 +8,7 @@ import task from './task'
 const mocks = [
   ...user,
   ...table,
-  ...task
+  ...task,
 ]
 
 // for front mock

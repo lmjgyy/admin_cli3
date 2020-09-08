@@ -91,24 +91,26 @@ export default {
 <script>
 export default {
   props: {
-		txt: {
-			type: String,
-			default: ''
-		}
-	},
-  render: function(h) {
-		var self=this;
-		return h('div',[h('p','你猜我输入的是啥：'+this.txt),h('input',{
-			on:{
-				input(event){
-          self.$emit('input', event.target.value);
-				}
-			}
-		})] );
-	},
-}
+    txt: {
+      type: String,
+      default: "",
+    },
+  },
+  render: function (h) {
+    var self = this;
+    return h("div", [
+      h("p", "你猜我输入的是啥：" + this.txt),
+      h("input", {
+        on: {
+          input(event) {
+            self.$emit("input", event.target.value);
+          },
+        },
+      }),
+    ]);
+  },
+};
 </script>
 
 <style>
-
 </style>

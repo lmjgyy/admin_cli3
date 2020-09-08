@@ -9,15 +9,17 @@
     :modal="false"
     append-to-body
     modal-append-to-body
-    size="40%">
+    size="40%"
+  >
     <div slot="title" class="base-drawer__title">
       <div class="base-drawer__title--text">任务管理</div>
-      <pagination class="base-drawer__title--pagination"
+      <pagination
+        class="base-drawer__title--pagination"
         v-show="showPage"
-        :pageVo.sync="pageVo" @update="refreshData"
+        :pageVo.sync="pageVo"
+        @update="refreshData"
         :pageConfig="{ hiddenPrev: true, layoutNext: 'total, prev, pager, next, jumper', 'small': true, 'background': false }"
-      >
-      </pagination>
+      ></pagination>
     </div>
     <!-- destroy-on-close 是否关闭之后销毁子元素 -->
     <base-table
@@ -31,111 +33,113 @@
       :headerCellStyle="() => {return {background: '#f2f4f7'}}"
       rowKey="id"
       :hasPagination="false"
-      @refreshData=""
+      @refreshData
     >
       <template v-slot:status="scope">
-        <el-tag :type="scope.scope.row.status | statusFilter" slot="Status">{{ $refs.table.renderCell(scope.scope.row, scope.scope.column, scope.scope.columnOption) }}</el-tag>
+        <el-tag
+          :type="scope.scope.row.status | statusFilter"
+          slot="Status"
+        >{{ $refs.table.renderCell(scope.scope.row, scope.scope.column, scope.scope.columnOption) }}</el-tag>
       </template>
     </base-table>
-<!--    <button @click="click">aaa</button> -->
+    <!--    <button @click="click">aaa</button> -->
   </el-drawer>
 </template>
 
 <script>
-import { getTaskList } from '@/api/task'
-import BaseTable from '@/components/BaseTable/_base-table'
-import Pagination from '@/components/BaseTable/pagination.vue'
+import { getTaskList } from "@/api/task";
+import BaseTable from "@/components/BaseTable/_base-table";
+import Pagination from "@/components/BaseTable/pagination.vue";
 export default {
   components: {
     BaseTable,
-    Pagination
+    Pagination,
   },
   props: {
     visible: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
     show: {
-      get () {
-        return this.visible
+      get() {
+        return this.visible;
       },
-      set (val) {
-        this.$emit('update:visible', val);
-      }
+      set(val) {
+        this.$emit("update:visible", val);
+      },
     },
     pageVo: {
-      get () {
+      get() {
         return {
           total: this.tableConfig.total || 0,
           pagesize: this.tableConfig.pagesize || 10,
-          currentPage: this.tableConfig.currentPage || 1
+          currentPage: this.tableConfig.currentPage || 1,
+        };
+      },
+      set(val) {
+        for (let attr in val) {
+          this.tableConfig[attr] = val[attr];
         }
       },
-      set (val) {
-        for (let attr in val) {
-          this.tableConfig[attr] = val[attr]
-        }
-      }
     },
   },
   watch: {
-    visible (newVal) {
-      newVal && this.fetchData()
+    visible(newVal) {
+      newVal && this.fetchData();
     },
     screenWidth: {
       immediate: true,
-      handler (newVal) {
+      handler(newVal) {
         let size = parseInt(newVal * 0.4);
-        console.log(size)
-        this.showPage = size >= 768
-      }
-    }
+        this.showPage = size >= 768;
+      },
+    },
   },
   mounted() {
     window.onresize = () => {
       return (() => {
         this.screenWidth = document.body.clientWidth;
-      })()
-    }
+      })();
+    };
   },
-  data () {
+  data() {
     return {
       tableConfig: {
         tableData: [],
-        columnOptions: 'TASKMANAGE',
+        columnOptions: "TASKMANAGE",
         total: 0,
         pagesize: 10,
-        currentPage:1
+        currentPage: 1,
       },
       loading: false,
       timer: null,
       screenWidth: document.body.clientWidth,
-      size: '40%',
-      showPage: true
-    }
+      size: "40%",
+      showPage: true,
+    };
   },
   methods: {
-    refreshData (val) {
-      this.pageVo = val
-      this.fetchData()
+    refreshData(val) {
+      this.pageVo = val;
+      this.fetchData();
     },
     fetchData() {
       let params = {
         currentPage: this.tableConfig.currentPage,
-        pagesize: this.tableConfig.pagesize
-      }
+        pagesize: this.tableConfig.pagesize,
+      };
       // this.loading = true;
-      getTaskList(params).then(res => {
+      getTaskList(params).then((res) => {
         this.tableConfig.tableData = res.data.items;
-        this.tableConfig.total = res.data.pageVo.total
-      })
+        this.tableConfig.total = res.data.pageVo.total;
+      });
     },
     // click() {
     //   this.$refs.drawer.closeDrawer()
     // },
-    beforeClose (done) {
+    beforeClose(done) {
       // this.$confirm('确定要关闭吗？')
       //   .then(_ => {
       //     this.timer = setTimeout(() => {
@@ -146,11 +150,10 @@ export default {
       //     }, 2000);
       //   })
       //   .catch(_ => {});
-      console.log(done);
-      done()
-    }
-  }
-}
+      done();
+    },
+  },
+};
 </script>
 
 <style>

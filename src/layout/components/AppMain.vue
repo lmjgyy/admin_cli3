@@ -3,31 +3,34 @@
     <transition name="fade-transform" mode="out-in">
       <router-view :key="key" />
     </transition>
+    <global-uploader></global-uploader>
     <drawer-ball :visible.sync="visible"></drawer-ball>
     <drawer :visible.sync="visible"></drawer>
   </section>
 </template>
 
 <script>
-import DrawerBall from './DrawerBall.vue'
-import Drawer from './Drawer.vue'
+import DrawerBall from "./DrawerBall.vue";
+import Drawer from "./Drawer.vue";
+import GlobalUploader from "./GlobalUploader.vue";
 export default {
-  name: 'AppMain',
+  name: "AppMain",
   components: {
     DrawerBall,
-    Drawer
+    Drawer,
+    GlobalUploader,
   },
-  data () {
+  data() {
     return {
-      visible: false
-    }
+      visible: false,
+    };
   },
   computed: {
     key() {
-      return this.$route.path
-    }
+      return this.$route.path;
+    },
   },
-}
+};
 </script>
 
 <style scoped>
@@ -38,7 +41,7 @@ export default {
   position: relative;
   overflow: hidden;
 }
-.fixed-header+.app-main {
+.fixed-header + .app-main {
   padding-top: 50px;
 }
 </style>
